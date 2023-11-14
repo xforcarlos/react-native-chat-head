@@ -7,6 +7,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.module.annotations.ReactModule;
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ChatHeadModule extends ReactContextBaseJavaModule {
   public static final String NAME = "ChatHead";
@@ -46,6 +48,21 @@ public class ChatHeadModule extends ReactContextBaseJavaModule {
     return NAME;
   }
 
+
+
+
+
+  // Use this method to get the current MainActivity instance
+  private Activity getMainActivity() {
+    return getCurrentActivity();
+  }
+  public void startMainActivity() {
+    Activity mainActivity = getMainActivity();
+    if (mainActivity != null) {
+      Intent intent = new Intent(mainActivity, getMainActivity().getClass());
+      mainActivity.startActivity(intent);
+    }
+  }
 
   public void findChatHeadBadge() {
     // Retrieve the chat head badge TextView when the host resumes
@@ -104,12 +121,21 @@ public class ChatHeadModule extends ReactContextBaseJavaModule {
           }
         });
 
+
         ImageView closeBtn = chatHeadView.findViewById(context.getResources().getIdentifier("close_btn", "id", context.getPackageName()));
         closeBtn.setOnClickListener(v -> {
           //close the service and remove the chat head from the window
           hideChatHead();
         });
 
+        ImageView chatHeadImage = chatHeadView.findViewById(context.getResources().getIdentifier("chat_head_profile_iv","id",context.getPackageName()));
+        chatHeadImage.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            Log.d("ChatHeadModule", "Chat head clicked - Opening the app"); // Additional log message
+            startMainActivity();
+          }
+        });
 
         windowManager.addView(chatHeadView, params);
         findChatHeadBadge();
@@ -125,6 +151,11 @@ public class ChatHeadModule extends ReactContextBaseJavaModule {
       getCurrentActivity().startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
     } else {
       RunHandler();
+
+      Activity activity = getCurrentActivity();
+      if (activity != null) {
+        activity.moveTaskToBack(true);
+      }
     }
   }
 
