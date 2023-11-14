@@ -1,0 +1,19 @@
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:layout_gravity="bottom|center_horizontal"
+>
+
+    <!-- Dismiss icon -->
+<ImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dismiss_icon"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_gravity="bottom|center_horizontal"
+    android:src="@android:drawable/ic_menu_close_clear_cancel"
+    android:layout_marginBottom="16dp"
+  />
+
+</RelativeLayout>
