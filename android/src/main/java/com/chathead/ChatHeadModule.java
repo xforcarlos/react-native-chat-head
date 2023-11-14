@@ -22,6 +22,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class ChatHeadModule extends ReactContextBaseJavaModule {
   public static final String NAME = "ChatHead";
@@ -30,6 +31,8 @@ public class ChatHeadModule extends ReactContextBaseJavaModule {
   private WindowManager windowManager;
   private View chatHeadView;
   private WindowManager.LayoutParams params;
+
+  private TextView chatHeadBadge; // Add this line to declare the TextView for badge count
 
 
   public ChatHeadModule(ReactApplicationContext reactContext) {
@@ -43,6 +46,14 @@ public class ChatHeadModule extends ReactContextBaseJavaModule {
     return NAME;
   }
 
+
+  public void findChatHeadBadge() {
+    // Retrieve the chat head badge TextView when the host resumes
+    int badgeId = context.getResources().getIdentifier("chat_head_badge", "id", context.getPackageName());
+    if (chatHeadView != null) {
+      chatHeadBadge = chatHeadView.findViewById(badgeId);
+    }
+  }
   private void RunHandler() {
     new Handler(Looper.getMainLooper()).post(new Runnable() {
       @Override
@@ -101,6 +112,7 @@ public class ChatHeadModule extends ReactContextBaseJavaModule {
 
 
         windowManager.addView(chatHeadView, params);
+        findChatHeadBadge();
       }
     });
   }
@@ -127,6 +139,18 @@ public class ChatHeadModule extends ReactContextBaseJavaModule {
         }
       }
     });
+  }
+
+  @ReactMethod
+  public void updateBadgeCount(int count) {
+    if (chatHeadBadge != null) {
+      chatHeadBadge.setText(String.valueOf(count));
+    }
+  }
+
+  @ReactMethod
+  public String getCount(){
+    return  chatHeadBadge.getText().toString();
   }
 
 }

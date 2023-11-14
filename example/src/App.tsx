@@ -4,7 +4,8 @@ import { StyleSheet, View, Text, Button } from 'react-native';
 import {
   showChatHead,
   hideChatHead,
-  updateChatHeadText,
+  updateChatBadgeCount,
+  getCount,
 } from 'react-native-chat-head';
 
 __DEV__ && console.log('multiply', showChatHead, showChatHead);
@@ -21,8 +22,9 @@ export default function App() {
 
       <Button
         title="Update Chat Head Text"
-        onPress={() => updateChatHeadText('15')}
+        onPress={() => updateChatBadgeCount(15)}
       />
+      <Button title="Get Count" onPress={() => setResult(getCount())} />
     </View>
   );
 }

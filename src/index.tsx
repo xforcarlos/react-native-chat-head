@@ -28,3 +28,12 @@ export function hideChatHead(): Promise<boolean> {
 export function updateChatHeadText(text: string): Promise<boolean> {
   return ChatHead.updateChatHeadText(text);
 }
+
+export function updateChatBadgeCount(count: number): Promise<boolean> {
+  if (typeof count !== 'number') {
+    throw new Error('count must be a number');
+  }
+  return ChatHead.updateBadgeCount(count);
+}
+
+export const getCount = (): number => Number(ChatHead.getCount());
