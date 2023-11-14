@@ -17,6 +17,23 @@ const ChatHead = NativeModules.ChatHead
       }
     );
 
-export function multiply(a: number, b: number): Promise<number> {
-  return ChatHead.multiply(a, b);
+export function showChatHead(): Promise<boolean> {
+  return ChatHead.showChatHead();
 }
+
+export function hideChatHead(): Promise<boolean> {
+  return ChatHead.hideChatHead();
+}
+
+export function updateChatHeadText(text: string): Promise<boolean> {
+  return ChatHead.updateChatHeadText(text);
+}
+
+export function updateChatBadgeCount(count: number): Promise<boolean> {
+  if (typeof count !== 'number') {
+    throw new Error('count must be a number');
+  }
+  return ChatHead.updateBadgeCount(count);
+}
+
+export const getCount = (): number => Number(ChatHead.getCount());

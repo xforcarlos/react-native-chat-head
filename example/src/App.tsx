@@ -1,18 +1,30 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-chat-head';
+import { StyleSheet, View, Text, Button } from 'react-native';
+import {
+  showChatHead,
+  hideChatHead,
+  updateChatBadgeCount,
+  getCount,
+} from 'react-native-chat-head';
 
+__DEV__ && console.log('multiply', showChatHead, showChatHead);
 export default function App() {
   const [result, setResult] = React.useState<number | undefined>();
 
-  React.useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
+  React.useEffect(() => {}, []);
 
   return (
     <View style={styles.container}>
       <Text>Result: {result}</Text>
+      <Button title="Show Chat Head" onPress={() => showChatHead()} />
+      <Button title="Hide Chat Head" onPress={() => hideChatHead()} />
+
+      <Button
+        title="Update Chat Head Text"
+        onPress={() => updateChatBadgeCount(15)}
+      />
+      <Button title="Get Count" onPress={() => setResult(getCount())} />
     </View>
   );
 }
