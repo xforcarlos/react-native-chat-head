@@ -33,10 +33,9 @@ public class ChatHeadModule extends ReactContextBaseJavaModule {
   private WindowManager windowManager;
   private View chatHeadView;
   private WindowManager.LayoutParams params;
-
   private TextView chatHeadBadge; // Add this line to declare the TextView for badge count
 
-
+  Boolean isOpen = false;
   public ChatHeadModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.context = reactContext;
@@ -72,6 +71,7 @@ public class ChatHeadModule extends ReactContextBaseJavaModule {
     }
   }
   private void RunHandler() {
+     isOpen = true;
     new Handler(Looper.getMainLooper()).post(new Runnable() {
       @Override
       public void run() {
@@ -101,20 +101,39 @@ public class ChatHeadModule extends ReactContextBaseJavaModule {
           private int initialY;
           private float initialTouchX;
           private float initialTouchY;
+          private int lastAction;
 
           @Override
           public boolean onTouch(View v, MotionEvent event) {
             switch (event.getAction()) {
               case MotionEvent.ACTION_DOWN:
+                //remember the initial position.
                 initialX = params.x;
                 initialY = params.y;
+                //get the touch location
                 initialTouchX = event.getRawX();
                 initialTouchY = event.getRawY();
+                lastAction = event.getAction();
+                return true;
+              case MotionEvent.ACTION_UP:
+                //As we implemented on touch listener with ACTION_MOVE,
+                //we have to check if the previous action was ACTION_DOWN
+                //to identify if the user clicked the view or not.
+                if (lastAction == MotionEvent.ACTION_DOWN) {
+                  //Open the chat conversation click.
+                  Activity activity = getCurrentActivity();
+                  startMainActivity();
+                  //close the service and remove the chat heads
+                }
+                lastAction = event.getAction();
                 return true;
               case MotionEvent.ACTION_MOVE:
+                //Calculate the X and Y coordinates of the view.
                 params.x = initialX + (int) (event.getRawX() - initialTouchX);
                 params.y = initialY + (int) (event.getRawY() - initialTouchY);
+                //Update the layout with new X & Y coordinate
                 windowManager.updateViewLayout(chatHeadView, params);
+                lastAction = event.getAction();
                 return true;
             }
             return false;
@@ -129,14 +148,6 @@ public class ChatHeadModule extends ReactContextBaseJavaModule {
         });
 
         ImageView chatHeadImage = chatHeadView.findViewById(context.getResources().getIdentifier("chat_head_profile_iv","id",context.getPackageName()));
-        chatHeadImage.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            Log.d("ChatHeadModule", "Chat head clicked - Opening the app"); // Additional log message
-            startMainActivity();
-          }
-        });
-
         windowManager.addView(chatHeadView, params);
         findChatHeadBadge();
       }
@@ -150,15 +161,12 @@ public class ChatHeadModule extends ReactContextBaseJavaModule {
         Uri.parse("package:" + context.getPackageName()));
       getCurrentActivity().startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
     } else {
-      RunHandler();
-
-      Activity activity = getCurrentActivity();
-      if (activity != null) {
-        activity.moveTaskToBack(true);
+      if (!isOpen) {
+        RunHandler();
       }
+
     }
   }
-
   @ReactMethod
   public void hideChatHead() {
     new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -167,18 +175,17 @@ public class ChatHeadModule extends ReactContextBaseJavaModule {
         if (windowManager != null && chatHeadView != null && chatHeadView.isAttachedToWindow()) {
           windowManager.removeView(chatHeadView);
           chatHeadView = null;
+          isOpen = false;
         }
       }
     });
   }
-
   @ReactMethod
   public void updateBadgeCount(int count) {
     if (chatHeadBadge != null) {
       chatHeadBadge.setText(String.valueOf(count));
     }
   }
-
   @ReactMethod
   public String getCount(){
     return  chatHeadBadge.getText().toString();
