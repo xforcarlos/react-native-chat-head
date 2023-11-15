@@ -1,6 +1,10 @@
-# react-native-chat-head
+# 🚀 react-native-chat-head
 
 android chat head (Android Only)
+
+<p>
+  <img width="255" src="./docs/demo.gif" alt="Demo">
+</p>
 
 ## Installation
 
