@@ -20,15 +20,9 @@ const ChatHead = NativeModules.ChatHead
 export function showChatHead(): Promise<boolean> {
   return ChatHead.showChatHead();
 }
-
 export function hideChatHead(): Promise<boolean> {
   return ChatHead.hideChatHead();
 }
-
-export function updateChatHeadText(text: string): Promise<boolean> {
-  return ChatHead.updateChatHeadText(text);
-}
-
 export function updateChatBadgeCount(count: number): Promise<boolean> {
   if (typeof count !== 'number') {
     throw new Error('count must be a number');
