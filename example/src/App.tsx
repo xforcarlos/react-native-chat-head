@@ -1,30 +1,24 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { StyleSheet, View, Button } from 'react-native';
 import {
   showChatHead,
   hideChatHead,
   updateChatBadgeCount,
-  getCount,
 } from 'react-native-chat-head';
 
-__DEV__ && console.log('multiply', showChatHead, showChatHead);
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
-
   React.useEffect(() => {}, []);
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
       <Button title="Show Chat Head" onPress={() => showChatHead()} />
       <Button title="Hide Chat Head" onPress={() => hideChatHead()} />
-
       <Button
         title="Update Chat Head Text"
         onPress={() => updateChatBadgeCount(15)}
       />
-      <Button title="Get Count" onPress={() => setResult(getCount())} />
+      <Button title="Get Count" onPress={() => {}} />
     </View>
   );
 }

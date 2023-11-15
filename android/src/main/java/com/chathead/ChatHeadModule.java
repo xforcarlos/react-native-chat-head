@@ -186,9 +186,5 @@ public class ChatHeadModule extends ReactContextBaseJavaModule {
       chatHeadBadge.setText(String.valueOf(count));
     }
   }
-  @ReactMethod
-  public String getCount(){
-    return  chatHeadBadge.getText().toString();
-  }
 
 }

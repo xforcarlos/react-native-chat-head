@@ -35,5 +35,3 @@ export function updateChatBadgeCount(count: number): Promise<boolean> {
   }
   return ChatHead.updateBadgeCount(count);
 }
-
-export const getCount = (): number => Number(ChatHead.getCount());
