@@ -76,7 +76,7 @@ npm install react-native-chat-head
 </RelativeLayout>
 ```
 
-3. Create `android/app/src/main/res/layout/drawable-nodpi` file:
+3. Create `android/app/src/main/res/drawable-nodpi` file:
 
 add any x image with name `ic_close.png`
 
