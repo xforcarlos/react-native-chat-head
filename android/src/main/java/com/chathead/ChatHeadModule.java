@@ -174,8 +174,10 @@ public class ChatHeadModule extends ReactContextBaseJavaModule {
   public void checkOverlayPermission(final Promise promise) {
     if (!Settings.canDrawOverlays(getReactApplicationContext())) {
         promise.resolve(false);
+        isOverlayPermissionGranted = false;
     } else {
         promise.resolve(true);
+        isOverlayPermissionGranted = true;
     }
   }
 
