@@ -35,9 +35,18 @@ export function updateChatBadgeCount(count: number): Promise<boolean> {
   return isAndroid ? ChatHead.updateBadgeCount(count) : _logWarning();
 }
 
+export function requrestPermission(): Promise<boolean> {
+  return isAndroid ? ChatHead.requrestPermission() : _logWarning();
+}
+
+export function checkOverlayPermission(): Promise<boolean> {
+  return isAndroid ? ChatHead.checkOverlayPermission() : _logWarning();
+}
 const chatHead = {
   showChatHead,
   hideChatHead,
   updateChatBadgeCount,
+  requrestPermission,
+  checkOverlayPermission,
 };
 export default chatHead;

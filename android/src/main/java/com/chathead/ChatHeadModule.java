@@ -2,6 +2,7 @@ package com.chathead;
 
 import androidx.annotation.NonNull;
 
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -11,6 +12,7 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -26,6 +28,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 public class ChatHeadModule extends ReactContextBaseJavaModule {
   public static final String NAME = "ChatHead";
   private static final int OVERLAY_PERMISSION_REQ_CODE = 1234;
@@ -34,8 +38,9 @@ public class ChatHeadModule extends ReactContextBaseJavaModule {
   private View chatHeadView;
   private WindowManager.LayoutParams params;
   private TextView chatHeadBadge; // Add this line to declare the TextView for badge count
-
+  private boolean isOverlayPermissionGranted = false;
   Boolean isOpen = false;
+
   public ChatHeadModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.context = reactContext;
@@ -46,10 +51,6 @@ public class ChatHeadModule extends ReactContextBaseJavaModule {
   public String getName() {
     return NAME;
   }
-
-
-
-
 
   // Use this method to get the current MainActivity instance
   private Activity getMainActivity() {
@@ -70,8 +71,9 @@ public class ChatHeadModule extends ReactContextBaseJavaModule {
       chatHeadBadge = chatHeadView.findViewById(badgeId);
     }
   }
+
   private void RunHandler() {
-     isOpen = true;
+    isOpen = true;
     new Handler(Looper.getMainLooper()).post(new Runnable() {
       @Override
       public void run() {
@@ -154,19 +156,38 @@ public class ChatHeadModule extends ReactContextBaseJavaModule {
     });
   }
 
-  @ReactMethod
-  public void showChatHead() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(context)) {
-      Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-        Uri.parse("package:" + context.getPackageName()));
-      getCurrentActivity().startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
-    } else {
-      if (!isOpen) {
-        RunHandler();
-      }
+ @ReactMethod
+  public void requrestPermission(final Promise promise) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (!Settings.canDrawOverlays(getReactApplicationContext())) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getReactApplicationContext().getPackageName()));
+            getCurrentActivity().startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
+        } else {
+            isOverlayPermissionGranted = true;
+        }
+    }
+    promise.resolve(isOverlayPermissionGranted);
+  }
 
+  @ReactMethod
+  public void checkOverlayPermission(final Promise promise) {
+    if (!Settings.canDrawOverlays(getReactApplicationContext())) {
+        promise.resolve(false);
+    } else {
+        promise.resolve(true);
     }
   }
+
+  @ReactMethod
+  public void showChatHead() {
+    if (isOverlayPermissionGranted && !isOpen){
+      RunHandler();
+    }else {
+      Log.e("warning","please request Permission first");
+    }
+  }
+
   @ReactMethod
   public void hideChatHead() {
     new Handler(Looper.getMainLooper()).post(new Runnable() {

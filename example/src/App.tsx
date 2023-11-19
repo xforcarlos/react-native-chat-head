@@ -1,24 +1,52 @@
 import * as React from 'react';
-
-import { StyleSheet, View, Button } from 'react-native';
+import { StyleSheet, View, Button, Text } from 'react-native';
 import {
   showChatHead,
   hideChatHead,
   updateChatBadgeCount,
+  requrestPermission,
+  checkOverlayPermission,
 } from 'react-native-chat-head';
 
 export default function App() {
-  React.useEffect(() => {}, []);
+  const [granted, setGranted] = React.useState(false);
+
+  const _requestPermission = async () => {
+    requrestPermission()
+      .then((res) => {
+        console.log('ress', res);
+      })
+      .catch((err) => {
+        console.log('err', err);
+      });
+  };
+
+  const _checkPermission = async () => {
+    setGranted(await checkOverlayPermission());
+  };
 
   return (
     <View style={styles.container}>
-      <Button title="Show Chat Head" onPress={() => showChatHead()} />
-      <Button title="Hide Chat Head" onPress={() => hideChatHead()} />
+      <Text>granted: {granted ? 'true' : 'false'}</Text>
+      <Button title="checkOverlayPermission" onPress={_checkPermission} />
+      <Button title="requrestPermission" onPress={_requestPermission} />
+      <Button
+        title="Show Chat Head"
+        onPress={() => {
+          console.log('showChatHead', showChatHead());
+        }}
+        disabled={!granted}
+      />
+      <Button
+        title="Hide Chat Head"
+        onPress={() => hideChatHead()}
+        disabled={!granted}
+      />
       <Button
         title="Update Chat Head Text"
+        disabled={!granted}
         onPress={() => updateChatBadgeCount(15)}
       />
-      <Button title="Get Count" onPress={() => {}} />
     </View>
   );
 }

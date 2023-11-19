@@ -87,6 +87,10 @@ import ChatHead from 'react-native-chat-head';
 
 // ...
 
+await ChatHead.checkOverlayPermission() // return boolean 
+
+await ChatHead.requrestPermission() // Request Permission
+
 ChatHead.showChatHead(); // show
 
 ChatHead.hideChatHead(); // hide
