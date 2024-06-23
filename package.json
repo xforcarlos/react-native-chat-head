@@ -1,6 +1,6 @@
 {
   "name": "react-native-chat-head",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "android chat head",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -37,7 +37,14 @@
   "keywords": [
     "react-native",
     "ios",
-    "android"
+    "android",
+    "chat-head",
+    "floating-bubble",
+    "messenger-style",
+    "overlay",
+    "badge",
+    "floating-widget",
+    "bubble-head"
   ],
   "repository": "https://github.com/xforcarlos/react-native-chat-head",
   "author": "Dawi <you@example.com> (https://github.com/xforcarlos)",
